@@ -25,11 +25,11 @@ $ php composer.phar update
 ```
 The server should now be working. Navigate to /app and install React dependencies
 ```
-npm install
+$ npm install
 ```
 Start the React development server
 ```
-npm run start
+$ npm run start
 ```
 Navigate to http://localhost:3000 to see the login page.
 
