@@ -1,0 +1,8 @@
+.Signup {
+  margin: 5rem;
+  padding: 5rem;
+  background-color: #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
