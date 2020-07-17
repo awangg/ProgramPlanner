@@ -12,7 +12,12 @@ A full-stack web application built for Paycom's Summer Engagement Program that a
 
 ### Installing
 
-Install XAMPP and run Apache and MySQL. Create a new database in MySQL with three tables: users, events, attendance. Go to /api/config/database.php and alter the following definitions:
+Install XAMPP and run Apache and MySQL. Navigate to the htdocs folder and clone the repository.
+```
+$ cd C:/xampp/htdocs
+$ git clone $REPO_LINK
+```
+Create a new database in MySQL with three tables: users, events, attendance. Go to /api/config/database.php and alter the following definitions:
 ```
 define('DB_SERVER', 'localhost'); // Default Host
 define('DB_USERNAME', 'root'); // Default Username
@@ -31,7 +36,7 @@ Start the React development server
 ```
 $ npm run start
 ```
-Navigate to http://localhost:3000 to see the login page.
+Navigate to http://localhost:3000 to see the login page. The API should also be available on http://localhost/ProgramPlanner/api
 
 ### Built With
 
