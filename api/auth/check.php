@@ -25,7 +25,6 @@
       $decoded = JWT::decode($jwt, JWT_SECRET_KEY, array('HS256'));
       $authenticated = true;
     } catch (Exception $e) {
-      http_response_code(401);
       echo json_encode(array(
         "error" => "Invalid token"
       ));

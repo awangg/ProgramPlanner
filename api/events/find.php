@@ -2,25 +2,27 @@
   include_once '../config/database.php';
   include_once './utils.php';
 
-  $user_id = "";
-  $registered = array();
+  $event_id = "";
 
   $request_body = json_decode(file_get_contents('php://input'));
-  $user_id = $request_body->user;
+  $event_id = $request_body->event;
 
-  if(!check_element_exists($db_link, "users", "id = '$user_id'")) {
+  if(!check_element_exists($db_link, "events", "id = '$event_id'")) {
     echo json_encode(array(
-      "error" => "User not found"
+      "error" => "Event not found"
     ));
     exit();
   }
 
-  $select_query = "SELECT event_id FROM attendance WHERE user_id = '$user_id'";
+  $select_query = "SELECT * FROM events WHERE id = '$event_id'";
   $result = mysqli_query($db_link, $select_query);
-  while($row = mysqli_fetch_assoc($result)) {
-    array_push($registered, $row['event_id']);
+  if($row = mysqli_fetch_assoc($result)) {
+    http_response_code(200);
+    echo json_encode(array(
+      "id" => $row['id'],
+      "title" => $row['title'],
+      "description" => $row['description'],
+      "date" => $row['date'],
+    ));
   }
-
-  http_response_code(200);
-  echo json_encode($registered);
 ?>
