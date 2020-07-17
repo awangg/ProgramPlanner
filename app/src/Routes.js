@@ -1,5 +1,4 @@
 import React from "react";
-import Cookies from 'universal-cookie';
 import { Route, Switch } from "react-router-dom";
 
 import Error from './containers/error/Error';
@@ -8,13 +7,6 @@ import Signup from './containers/signup/Signup';
 import Home from "./containers/home/Home";
 
 class Routes extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    this.cookies = new Cookies();
-    if(this.cookies.get('token')) this.setState({authenticated: true});
-  }
   render() {
     return (
       <Switch>

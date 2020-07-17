@@ -14,11 +14,11 @@ class App extends React.Component {
     };
     this.cookies = new Cookies();
   }
-  setAuthentication(value) {
-    this.setState({authenticated: value});
-  }
   componentDidMount() {
     if(this.cookies.get('token')) this.setState({authenticated: true});
+  }
+  setAuthentication(value) {
+    this.setState({authenticated: value});
   }
   logOut() {
     this.cookies.remove('token');
@@ -33,7 +33,6 @@ class App extends React.Component {
             <Link to="/">
               <img
                 src="logo192.png"
-                width="30"
                 height="30"
                 className="d-inline-block align-top"
                 alt="React Bootstrap logo"
@@ -41,14 +40,14 @@ class App extends React.Component {
             </Link>
           </Navbar.Brand>{!this.state.authenticated &&
           <Navbar.Collapse>
-            <Nav className="mx-auto">
+            <Nav className="ml-auto">
               <Nav.Link href="/signup">Signup</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
             </Nav>
           </Navbar.Collapse>}
           {this.state.authenticated &&
           <Navbar.Collapse>
-            <Nav className="mx-auto">
+            <Nav className="ml-auto">
               <Nav.Link href="/login" onClick={this.logOut.bind(this)}>Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>}

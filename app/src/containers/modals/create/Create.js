@@ -11,38 +11,46 @@ class Create extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: "",
-      date: "",
-      time: "10:00",
-      description: ""
+      title: '',
+      date: '',
+      time: '10:00', // TimePicker defaults to 10:00am
+      description: '',
+      error: ''
     }
     this.cookies = new Cookies();
   }
+
   handleChange = e => {
     const key = e.target.name;
     const value = e.target.value;
-    console.log(value)
     this.setState({[key]: value})
   }
+
   handleTimeChange = time => {
     let converted = moment.utc(time * 1000).format("HH:mm");
     this.setState({time: converted});
   }
+
+  /**
+   * Sends create request to backend
+   * POST /api/events/create.php
+   * 
+   * @param {object} e Event
+   */
   handleFormSubmit = e => {
     e.preventDefault();
-    let authorizationHeader = "Bearer " + this.cookies.get('token');
-    console.log(this.state.date + " " + this.state.time + ":00");
+    const authHeader = "Bearer " + this.cookies.get('token');
     if(this.state.title.length > 0 && this.state.description.length > 0 && this.state.date.length > 0 && this.state.time.length > 0) {
       axios({
         method: "POST",
         url: "http://localhost/ProgramPlanner/api/events/create.php",
         headers: {
-          "Authorization": authorizationHeader,
+          "Authorization": authHeader,
           "Content-Type": "application/json"
         },
         data: {
           title: this.state.title,
-          date: this.state.date + " " + this.state.time + ":00",
+          date: this.state.date + " " + this.state.time + ":00", // Build into MySQL DateTime format
           description: this.state.description
         }
       }).then( response => {
@@ -51,10 +59,14 @@ class Create extends React.Component {
           return;
         }
         this.props.closeModal();
-        this.props.retrieveEvents();
+        this.props.reloadEvents();
+        this.setState({'error': ''})
       });
+    } else {
+      this.setState({'error': 'At least one field is missing'});
     }
   }
+
   render() {
     return (
       <>

@@ -1,5 +1,7 @@
 .Home {
-  padding: 5rem;
+  margin-top: 5rem;
+  padding: 1.5em;
+  background-color: #09d96a;
   display: flex;
   align-items: center;
   justify-content: center;

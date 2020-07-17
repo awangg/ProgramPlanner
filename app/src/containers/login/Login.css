@@ -1,8 +1,15 @@
 .Login {
-  margin: 5rem;
-  padding: 5rem;
-  background-color: #eeeeee;
+  margin-top: 5em;
+  padding: 3em;
+  background-color: #029647;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+Form {
+  align-items: center;
+  background-color: #fefefe;
+  padding: 3rem;
+  border-radius: 16px;
 }

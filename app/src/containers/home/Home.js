@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from "axios";
+import axios from 'axios';
 import Cookies from 'universal-cookie';
 import { Alert, Modal, Container, Row, Col, Card, Button } from 'react-bootstrap';
 import Moment from 'react-moment';
@@ -17,21 +17,28 @@ class Home extends React.Component {
       creating: false,
       editing: false
     }
+    this.authorizationHeader = '';
     this.events = [];
     this.registered = [];
     this.cookies = new Cookies();
   }
+
   componentDidMount() {
-    this.retrieveEvents();
-    this.getRegisteredEvents();
+    this.getAllEvents();
+    this.getUserRegistration();
   }
-  retrieveEvents() {
-    let authorizationHeader = "Bearer " + this.cookies.get('token');
+
+  /**
+   * Retrieves all events from DB
+   * GET /api/events/retrieve.php
+   */
+  getAllEvents() {
+    const authHeader = "Bearer " + this.cookies.get('token');
     axios({
       method: "GET",
       url: "http://localhost/ProgramPlanner/api/events/retrieve.php",
       headers: {
-        "Authorization": authorizationHeader,
+        "Authorization": authHeader,
         "Content-Type": "application/json"
       }
     }).then( response => {
@@ -43,13 +50,20 @@ class Home extends React.Component {
       this.setState({'error': ''});
     })
   }
+
+  /**
+   * Deletes event from DB
+   * POST /api/events/delete.php
+   * 
+   * @param {object} e Event
+   */
   deleteEvent(e) {
-    let authorizationHeader = "Bearer " + this.cookies.get('token');
+    const authHeader = "Bearer " + this.cookies.get('token');
     axios({
       method: "POST",
       url: "http://localhost/ProgramPlanner/api/events/delete.php",
       headers: {
-        "Authorization": authorizationHeader,
+        "Authorization": authHeader,
         "Content-Type": "application/json"
       },
       data: {
@@ -60,18 +74,24 @@ class Home extends React.Component {
         this.setState({'error': response.data.error});
         return;
       }
-      this.retrieveEvents();
+      // Reload events page
+      this.getAllEvents();
       this.setState({'error': ''});
     })
   }
-  getRegisteredEvents() {
+
+  /**
+   * Retrieves events that the current user is registered for
+   * POST /api/events/attendance.php
+   */
+  getUserRegistration() {
     this.registered = [];
-    let authorizationHeader = "Bearer " + this.cookies.get('token');
+    const authHeader = "Bearer " + this.cookies.get('token');
     axios({
       method: "POST",
-      url: "http://localhost/ProgramPlanner/api/events/find.php",
+      url: "http://localhost/ProgramPlanner/api/events/attendance.php",
       headers: {
-        "Authorization": authorizationHeader,
+        "Authorization": authHeader,
         "Content-Type": "application/json"
       },
       data: {
@@ -82,19 +102,24 @@ class Home extends React.Component {
         this.setState({'error': response.data.error});
         return;
       }
-      response.data.map( value => {
-        this.registered.push(value);
-      });
+      response.data.map( value => { this.registered.push(value) });
       this.setState({'error': ''});
     })
   }
-  registerEvent(e) {
-    let authorizationHeader = "Bearer " + this.cookies.get('token');
+
+  /**
+   * Registers user for specified event
+   * POST /api/events/signup.php
+   * 
+   * @param {object} e Event 
+   */
+  registerForEvent(e) {
+    const authHeader = "Bearer " + this.cookies.get('token');
     axios({
       method: "POST",
       url: "http://localhost/ProgramPlanner/api/events/signup.php",
       headers: {
-        "Authorization": authorizationHeader,
+        "Authorization": authHeader,
         "Content-Type": "application/json"
       },
       data: {
@@ -106,18 +131,25 @@ class Home extends React.Component {
         this.setState({'error': response.data.error});
         return;
       }
-      this.retrieveEvents();
-      this.getRegisteredEvents();
+      this.getAllEvents();
+      this.getUserRegistration();
       this.setState({'error': ''});
     })
   }
-  cancelEvent(e) {
-    let authorizationHeader = "Bearer " + this.cookies.get('token');
+
+  /**
+   * Cancels users existing registration for an event
+   * POST /api/events/backout.php
+   * 
+   * @param {object} e Event
+   */
+  cancelOnEvent(e) {
+    const authHeader = "Bearer " + this.cookies.get('token');
     axios({
       method: "POST",
       url: "http://localhost/ProgramPlanner/api/events/backout.php",
       headers: {
-        "Authorization": authorizationHeader,
+        "Authorization": authHeader,
         "Content-Type": "application/json"
       },
       data: {
@@ -129,49 +161,60 @@ class Home extends React.Component {
         this.setState({'error': response.data.error});
         return;
       }
-      this.retrieveEvents();
-      this.getRegisteredEvents();
+      this.getAllEvents();
+      this.getUserRegistration();
       this.setState({'error': ''});
     })
   }
-  openEdit() {
-    this.setState({'editing': true})
+
+  /**
+   * Controls show/hide for edit modal
+   */
+  openEdit(e) {
+    this.setState({'currentEvent': e.target.value});
+    this.setState({'editing': true});
   }
   closeEdit() {
-    this.setState({'editing': false})
+    this.setState({'editing': false});
   }
+
+  /**
+   * Controls show/hide for create modal
+   */
   openCreate() {
-    this.setState({'creating': true})
+    this.setState({'creating': true});
   }
   closeCreate() {
-    this.setState({'creating': false})
+    this.setState({'creating': false});
   }
+
   render() {
     if(!this.props.authenticated) {
       return (
-        <div className="Home">
-          <Alert as={Row} variant="danger">
-            <Col className="text-center" sm={{ span: 12 }}>You are not authorized to view this page</Col>
-          </Alert>
-        </div>
+        <Alert as={Row} variant="danger">
+          <Col className="text-center" sm={{ span: 12 }}>You are not authorized to view this page</Col>
+        </Alert>
       );
     }
+
     return (
       <div className="Home">
         <Container fluid>
-          <h1 className="display-4 text-center"> Browse Sessions </h1>
+          <h1 className="text-center"> Browse Sessions </h1>
+
           {this.state.error && <Alert as={Row} variant="danger">
             <Col className="text-center" sm={{ span: 12 }}>Error: {this.state.error}</Col>
           </Alert>}
           {this.events.length <= 0 && <Alert as={Row} variant="danger" className="my-5">
             <Col className="text-center" sm={{ span: 12 }}>No Events</Col>
           </Alert>}
+
           {this.events.length > 0 && this.events.map(event => 
-            <Row className="my-4">
-              <Col sm={{ span: 12}}>
+            <Row className="my-4" key={event.id}>
+              <Col>
                 <Card>
                   <Card.Body>
-                    <Card.Title>{event.title}</Card.Title>
+                    <Card.Title><strong>{event.title}</strong></Card.Title>
                     <Card.Subtitle><Moment format="ddd MMMM Do YYYY @ hh:mma">{event.date}</Moment></Card.Subtitle>
                     <hr />
                     <Card.Text>
@@ -179,14 +222,13 @@ class Home extends React.Component {
                     </Card.Text>
                     <hr />
                     <Card.Text className="text-center text-danger"><strong>{event.attendance} registered</strong></Card.Text>
-                    <div class="text-center">
-                      {!this.registered.includes(event.id) && <Button value={event.id} variant="primary" className="mx-1" onClick={this.registerEvent.bind(this)}>Register</Button>}
-                      {this.registered.includes(event.id) && <Button value={event.id} variant="danger" className="mx-1" onClick={this.cancelEvent.bind(this)}>Cancel</Button>}
-                      <Button variant="warning" className="mx-1" onClick={this.openEdit.bind(this)}>Edit</Button>
-                      <Modal show={this.state.editing} onHide={this.closeEdit.bind(this)}>
-                        <Edit event={event} closeModal={this.closeEdit.bind(this)} retrieveEvents={this.retrieveEvents.bind(this)} />
-                      </Modal>
-                      <Button value={event.id} variant="danger" className="mx-1" onClick={this.deleteEvent.bind(this)}>Delete</Button>
+                    <div className="text-center">
+                      {!this.registered.includes(event.id) && <Button value={event.id} variant="primary" className="mx-1 my-2" onClick={this.registerForEvent.bind(this)}>Register</Button>}
+
+                      {this.registered.includes(event.id) && <Button value={event.id} variant="danger" className="mx-1 my-2" onClick={this.cancelOnEvent.bind(this)}>Cancel</Button>}
+
+                      <Button value={event.id} variant="warning" className="mx-1 my-2" onClick={this.openEdit.bind(this)}>Edit</Button>
+                      <Button value={event.id} variant="danger" className="mx-1 my-2" onClick={this.deleteEvent.bind(this)}>Delete</Button>
                     </div>
                   </Card.Body>
                 </Card>
@@ -196,12 +238,17 @@ class Home extends React.Component {
           <Row>
             <Col className="text-center">
               <Button variant="success" onClick={this.openCreate.bind(this)}>Add an Event</Button>
-              <Modal show={this.state.creating} onHide={this.closeCreate.bind(this)}>
-                <Create closeModal={this.closeCreate.bind(this)} retrieveEvents={this.retrieveEvents.bind(this)} />
-              </Modal>
             </Col>
           </Row>
         </Container>
+          
+        <Modal show={this.state.creating} onHide={this.closeCreate.bind(this)}>
+          <Create closeModal={this.closeCreate.bind(this)} reloadEvents={this.getAllEvents.bind(this)} />
+        </Modal>
+
+        <Modal show={this.state.editing} onHide={this.closeEdit.bind(this)}>
+          <Edit event={this.state.currentEvent} closeModal={this.closeEdit.bind(this)} reloadEvents={this.getAllEvents.bind(this)} />
+        </Modal>
       </div>
     );
   }

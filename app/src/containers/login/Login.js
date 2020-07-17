@@ -17,11 +17,19 @@ class Login extends React.Component {
       redirect: false
     }
   }
+
   handleChange = e => {
     const key = e.target.name;
     const value = e.target.value;
     this.setState({[key]: value})
   }
+
+  /**
+   * Sends login request
+   * POST /api/auth/login.php
+   * 
+   * @param {object} e Event
+   */
   handleFormSubmit = e => {
     e.preventDefault();
     if(this.state.username.length > 0 && this.state.password.length > 0) {
@@ -40,17 +48,19 @@ class Login extends React.Component {
           this.setState({'error': response.data.error});
           return;
         }
+        // Sends back verified auth status to App
         this.props.setAuthentication(true);
         this.cookies.set('token', response.data.token, { path: '/', maxAge: 1800 });
         this.cookies.set('username', response.data.username, { path: '/', maxAge: 1800 });
         this.cookies.set('user_id', response.data.id, { path: '/', maxAge: 1800 });
-        this.setState({error: ""});
         this.setState({redirect: true})
+        this.setState({error: ""});
       })
     } else {
-      this.setState({error: "Username or Password not filled"});
+      this.setState({error: "Username or password not filled"});
     }
   };
+
   render() {
     let redirect = this.state.redirect;
     if(redirect) {
@@ -84,8 +94,8 @@ class Login extends React.Component {
           </Form.Group>
 
           {this.state.error && <Alert as={Row} variant="danger">
-          <Col className="text-center" sm={{ span: 12 }}>Error: {this.state.error}</Col>
-        </Alert>}
+            <Col className="text-center" sm={{ span: 12 }}>Error: {this.state.error}</Col>
+          </Alert>}
         </Form>
       </div>
     );

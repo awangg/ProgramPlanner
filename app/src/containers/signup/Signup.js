@@ -18,16 +18,24 @@ class Signup extends React.Component {
       redirect: false
     }
   }
+
   handleChange = e => {
     const key = e.target.name;
     const value = e.target.value;
     this.setState({[key]: value})
   }
+
+  /**
+   * Sends signup request
+   * POST /api/auth/signup.php
+   * 
+   * @param {object} e Event
+   */
   handleFormSubmit = e => {
     e.preventDefault();
     if(this.state.username.length <= 0 || this.state.password.length <= 0 || this.state.confirmPassword.length <= 0) {
       this.setState({error: "At least one field is not filled"});
-    } else if (this.state.password != this.state.confirmPassword) {
+    } else if (this.state.password !== this.state.confirmPassword) {
       this.setState({error: "Passwords do not match"});
     } else {
       axios({
@@ -45,11 +53,12 @@ class Signup extends React.Component {
           this.setState({'error': response.data.error});
           return;
         }
-        this.setState({error: ""});
         this.setState({redirect: true})
+        this.setState({error: ""});
       })
     }
   }
+
   render() {
     let redirect = this.state.redirect;
     if(redirect) {
@@ -92,8 +101,8 @@ class Signup extends React.Component {
           </Form.Group>
 
           {this.state.error && <Alert as={Row} variant="danger">
-          <Col className="text-center" sm={{ span: 12 }}>Error: {this.state.error}</Col>
-        </Alert>}
+            <Col className="text-center" sm={{ span: 12 }}>Error: {this.state.error}</Col>
+          </Alert>}
         </Form>
       </div>
     );

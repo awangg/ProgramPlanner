@@ -4,7 +4,7 @@ import "./Error.css";
 class Error extends React.Component {
   render() {
     return (
-      <div className="NotFound">
+      <div className="Error">
         <h3>Page Not Found</h3>
       </div>
     );
