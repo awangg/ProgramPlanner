@@ -1,7 +1,6 @@
 <?php
   include_once '../config/database.php';
 
-  header("Access-Control-Allow-Origin: *");
   header("Content-Type: application/json; charset=UTF-8");
   header("Access-Control-Allow-Methods: POST");
   header("Access-Control-Max-Age: 3600");
@@ -18,7 +17,6 @@
 
   // If there already exist users with the requested username
   if(mysqli_fetch_assoc($users)) {
-    http_response_code(400);
     echo json_encode(array(
       "error" => "Username already exists"
     ));
@@ -35,7 +33,6 @@
       ));
     // Unexpected DB error
     }else {
-      http_response_code(500);
       echo json_encode(array(
         "error" => "Failed to INSERT into database"
       ));

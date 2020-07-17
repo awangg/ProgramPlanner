@@ -12,7 +12,6 @@
   $new_description = $request_body->description;
 
   if(!check_element_exists($db_link, "events", "id = '$event_id'")) {
-    http_response_code(404);
     echo json_encode(array(
       "error" => "Event not found"
     ));
@@ -29,7 +28,6 @@
       "description" => $new_description
     ));
   } else {
-    http_response_code(500);
     echo json_encode(array(
       "error" => "Could not UPDATE in database"
     ));

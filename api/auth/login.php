@@ -4,9 +4,8 @@
   require "../../vendor/autoload.php";
   use \Firebase\JWT\JWT;
 
-  header("Access-Control-Allow-Origin: *");
   header("Content-Type: application/json; charset=UTF-8");
-  header("Access-Control-Allow-Methods: POST");
+  header('Access-Control-Allow-Methods', "POST, OPTIONS");
   header("Access-Control-Max-Age: 3600");
   header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
@@ -41,15 +40,19 @@
       http_response_code(200);
       echo json_encode(array(
         "token" => $jwt,
+        "id" => $id,
         "username" => $username,
         "expireAt" => $jwt_expire
       ));
-    }else {
-      http_response_code(401);
+    } else {
       echo json_encode(array(
         "error" => "Incorrect password"
       ));
     }
+  } else {
+    echo json_encode(array(
+      "error" => "User does not exist"
+    ));
   }
 
 ?>

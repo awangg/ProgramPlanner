@@ -9,7 +9,6 @@
   $event_id = $request_body->event;
 
   if(!check_element_exists($db_link, "events", "id = '$event_id'")) {
-    http_response_code(404);
     echo json_encode(array(
       "error" => "Event not found"
     ));
@@ -17,7 +16,6 @@
   }
 
   if(!check_element_exists($db_link, "users", "id = '$user_id'")) {
-    http_response_code(404);
     echo json_encode(array(
       "error" => "User not found"
     ));
@@ -25,7 +23,6 @@
   }
 
   if(!check_element_exists($db_link, "attendance", "user_id = '$user_id' AND event_id = '$event_id'")) {
-    http_response_code(404);
     echo json_encode(array(
       "error" => "Attendance record not found"
     ));
@@ -40,7 +37,6 @@
       "event" => $event_id
     ));
   }else {
-    http_response_code(500);
     echo json_encode(array(
       "error" => "Could not DELETE from database"
     ));
