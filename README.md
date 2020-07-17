@@ -15,7 +15,7 @@ A full-stack web application built for Paycom's Summer Engagement Program that a
 Install XAMPP and run Apache and MySQL. Navigate to the htdocs folder and clone the repository.
 ```
 $ cd C:/xampp/htdocs
-$ git clone $REPO_LINK
+$ git clone https://github.com/awangg/ProgramPlanner.git
 ```
 Create a new database in MySQL with three tables: users, events, attendance. Go to /api/config/database.php and alter the following definitions:
 ```
