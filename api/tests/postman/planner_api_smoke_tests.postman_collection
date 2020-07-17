@@ -1,0 +1,315 @@
+{
+	"info": {
+		"_postman_id": "5df5e2c0-6604-4137-bcec-ce7323db7862",
+		"name": "Planner_API_Smoke_Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New user registration",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"testpw\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/auth/register.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1be0c4ef-9f8c-4768-af85-3feb70be9aa7",
+						"exec": [
+							"var response = pm.response;\r",
+							"var jsonData = response.json();\r",
+							"pm.environment.set(\"bearer_token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"testpw\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/auth/login.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all events",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_link}}/api/events/retrieve.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"retrieve.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new event",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"date\": \"9999-12-31 23:59:59\",\r\n    \"title\": \"Test\",\r\n    \"description\": \"Lorem Ipsum\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/events/create.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"create.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update existing event",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"date\": \"2001-06-09 20:15:36\",\r\n    \"title\": \"New Title\",\r\n    \"description\": \"New Description\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/events/update.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"update.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an event",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/events/delete.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"delete.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User signup for event",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": 5,\r\n    \"event\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/events/signup.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"signup.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User back out of event",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": 5,\r\n    \"event\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_link}}/api/events/backout.php",
+					"host": [
+						"{{base_link}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"backout.php"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwcm9ncmFtcGxhbm5lciIsIm5iZiI6MTU5NDk1NjIxMywiZXhwIjoxNTk0OTU4MDEzLCJkYXRhIjp7ImlkIjoiMyIsInVzZXJuYW1lIjoiYXdhbmciLCJwYXNzd29yZCI6ImFkbWluIn19.lpeHWEDEHLx-uN_2ZtfiU2EjdvAp62KEUNSrfehN8M8",
+				"type": "string"
+			}
+		]
+	},
+	"protocolProfileBehavior": {}
+}
